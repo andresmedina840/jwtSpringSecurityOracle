@@ -1,11 +1,13 @@
 package co.gov.policia.pwa.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import co.gov.policia.pwa.payload.request.LoginRequest;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,17 +21,16 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 	public Authentication attemptAuthentication(HttpServletRequest request, 
 			HttpServletResponse response) throws AuthenticationException {
 		
-		AuthCredentials authCredentials = new AuthCredentials();
-
-		
+		LoginRequest authCredentials = new LoginRequest();
+	
 		try {
-			authCredentials = new ObjectMapper().readValue(request.getReader(), AuthCredentials.class);
+			authCredentials = new ObjectMapper().readValue(request.getReader(), LoginRequest.class);
 		} catch (IOException e) {
 		}
 
 		UsernamePasswordAuthenticationToken usernamePAT = new UsernamePasswordAuthenticationToken(
-				authCredentials.getEmail(), 
-				authCredentials.getPassword(), 
+				authCredentials.getUsuario(), 
+				authCredentials.getContrasenia(), 
 				Collections.emptyList()
 		);
 
@@ -42,8 +43,9 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 			FilterChain chain,
 			Authentication authResult) throws IOException, ServletException {
 
-		UserDetailsImpl userDetails = (UserDetailsImpl) authResult.getPrincipal();
-		String token = TokenUtils.generarJsonWebToken(userDetails.getNombre(), userDetails.getUsername());
+		//UserDetalle userDetails = (UserDetalle) authResult.getPrincipal();
+		
+		String token = AuthJwtUtil.generarJsonWebToken(authResult);
 		
 		response.addHeader("Authorization", "Bearer " + token);
 		response.getWriter().flush();

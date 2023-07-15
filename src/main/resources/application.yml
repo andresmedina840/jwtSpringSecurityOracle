@@ -1,0 +1,106 @@
+server:
+  port: 8082
+  error:
+    include-message: always
+    whitelabel:
+      enabled: true
+  servlet:
+    session:
+      timeout: 2m
+    context-parameters:
+      frameOptions:
+        SAMEORIGIN
+    #context-path: /sigicmovil_back
+  ssl:
+    enabled: false
+    key-store: classpath:keystore/llavero.jks
+    key-store-password: changeit
+    key-store-type: jks
+    key-alias: 1
+    key-password: changeit
+
+spring:
+  profiles:
+    active: dev
+    #active: weblogic
+  jackson:
+    mapper:
+      default-view-inclusion  : true
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      FAIL_ON_IGNORED_PROPERTIES: false
+      FAIL_ON_UNKNOWN_PROPERTIES: false
+      ACCEPT_SINGLE_VALUE_AS_ARRAY: true
+  #Configuración archivos máximo tamaño recibido    
+  servlet:
+    multipart:
+      max-file-size:
+        10MB
+      max-request-size:
+        10MB
+  application:
+    name: sigicmovil-microservicios
+      
+  jpa:
+    generate-ddl: true
+    show_sql: true    
+    openInView: false
+    hibernate:
+        ddl-auto: none
+        use-new-id-generator-mappings: false
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+          temp:
+            '[use_jdbc_metadata_defaults]': false
+        dialect: org.hibernate.dialect.Oracle10gDialect
+        '[format_sql]': true
+        #Para que los procedimientos almacenados reciban parámetros vacios
+        '[proc.param_null_passing]': true
+            
+  data:
+    jpa:
+      repositories.enabled: true
+  sql:
+    init:
+      continue-on-error: true
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+logging:
+  level:
+    '[org.springframework.web]': INFO
+    '[org.springframework.security]': DEBUG
+    '[co.gov.policia.pwa]': DEBUG
+  pattern:
+    dateformat: dd/MM/yyyy hh:mm:ss a
+
+# App Properties
+backend:
+  app:
+    jwtSecret: 334d2c212cbe70c1d7f180b0b5d96d9e6bf2f45c12f5022f149e2ee8badfa061
+    jwtExpirationTime: 86400000 #milisegundos un dia  
+---
+spring:
+  config: 
+    activate:
+      on-profile:
+      - dev
+  datasource:
+    url: jdbc:oracle:thin:@192.168.1.12:1521/XE
+    username: USR_PWA
+    password: oracle123
+    #url: jdbc:oracle:thin:@172.28.40.43:1521/SIGIDESA
+    #username: USR_PWA
+    #password: oracle123
+        
+---
+spring:
+  config: 
+    activate:
+      on-profile:
+      - weblogic
+  datasource:
+    jndi-name: pwaDataSource
+

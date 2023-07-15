@@ -5,23 +5,25 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import co.gov.policia.pwa.entity.Usuario;
-import co.gov.policia.pwa.repository.UsuarioRepository;
+import co.gov.policia.pwa.entity.VwPwaAdminUsuarios;
+import co.gov.policia.pwa.service.impl.UserServiceImpl;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
 	
 	@Autowired
-	private UsuarioRepository usuarioRepository;
+	UserServiceImpl usuarioRepository;
 
 	@Override
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-		System.out.println("Se carga el usuario en UserDetailServiceImpl");
-		Usuario usuario = usuarioRepository.findOneByEmail(email)
-		.orElseThrow(() -> new UsernameNotFoundException("El usuario con email: " + email + " no existe."));
-		
-		return new UserDetailsImpl(usuario);
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+	System.out.println("Se carga el usuario en UserDetailServiceImpl");
+	VwPwaAdminUsuarios usuario = usuarioRepository.selectUserByUsername(username);
+		System.out.println("Usuario en public UserDetails loadUserByUsername: "+ usuario.getUsuarioSipac());
+		if (usuario.getConsecutivo() != null) {
+			return UserDetalle.construirUsuario(usuario);
+		} else {
+			throw new UsernameNotFoundException("El usuario no existe");
+		}
 	}
 
 }

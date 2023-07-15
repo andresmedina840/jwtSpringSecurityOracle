@@ -1,0 +1,15 @@
+${AnsiColor.BRIGHT_BLUE}
+
+  ______        ___    
+ |  _ \ \      / / \   
+ | |_) \ \ /\ / / _ \  
+ |  __/ \ V  V / ___ \ 
+ |_|     \_/\_/_/   \_\
+                                               
+                                                                                                                                              
+SERVIDOR DE PWA 2022
+${AnsiColor.CYAN}${AnsiStyle.BOLD}
+::  Version de Java                 ::  (v${java.version})
+::  Version de Spring Boot          ::  (v${spring-boot.version})
+${AnsiStyle.NORMAL}
+Spring Boot Version: ${spring-boot.version}${spring-boot.formatted-version}

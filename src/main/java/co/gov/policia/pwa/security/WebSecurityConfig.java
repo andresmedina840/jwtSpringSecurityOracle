@@ -34,7 +34,9 @@ public class WebSecurityConfig {
 					csp -> csp.policyDirectives("default-src 'self' https: ; script-src 'self' ; object-src 'self'"));})
 			.cors(cors -> cors.disable())
 			.authorizeHttpRequests(auth -> {
-				auth.antMatchers("/**").permitAll();
+				auth.antMatchers("/v1/api/sigicmovil/auth/signin", "/v1/api/sigicmovil/auth/piePaginaInicioPagina",
+						"/v1/api/sigicmovil/auth/**", "/v1/api/**", "/v2/api-docs/**", "/swagger-ui/**",
+						"/swagger-resources/**", "/configuration/**").permitAll();
 				auth.anyRequest().authenticated();
 		})
 		.sessionManagement(session -> {session.sessionCreationPolicy(SessionCreationPolicy.STATELESS);})
